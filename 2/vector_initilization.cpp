@@ -6,8 +6,10 @@ int main()
     // vector <int> v(2); type -2
     // vector <int> v(2,3); type -3
     // vector<int> v(5,10);
-    vector<int> v2(2,100);
-    vector<int> v(v2);
+    // vector<int> v2(2,100);
+    // vector<int> v(v2); type -4 
+    int a[6] = { 1,2,3,4,5,6};
+    vector<int>v(a,a+6); 
     for(int i=0; i<v.size();i++)
     {
         cout<<v[i]<<" ";
