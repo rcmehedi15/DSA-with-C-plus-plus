@@ -1,0 +1,1 @@
+{"name":"Local: prefix_sum_array","url":"e:\\phitron\\DSA with C++\\3\\prefix_sum_array.cpp","tests":[{"id":1701826854645,"input":"6 3\n6 4 2 7 2 7\n1 3\n3 6\n1 6","output":"12\n18\n28"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"e:\\phitron\\DSA with C++\\3\\prefix_sum_array.cpp","group":"local","local":true}
