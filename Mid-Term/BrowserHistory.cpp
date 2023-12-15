@@ -1,9 +1,7 @@
-#include <iostream>
-#include <list>
-#include <algorithm>  // Add this header for find
-#include <string>
+#include <bits/stdc++.h>
 
 using namespace std;
+
 
 class WebBrowser {
 private:
