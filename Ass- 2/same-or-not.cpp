@@ -3,12 +3,11 @@
 using namespace std;
 
 int main() {
-    // Input
     int n, m;
     cin >> n >> m;
 
     stack<int> stk;
-    queue<int> q;
+    queue<int> que;
 
     // Input stack
     for (int i = 0; i < n; i++) {
@@ -21,21 +20,21 @@ int main() {
     for (int i = 0; i < m; i++) {
         int x;
         cin >> x;
-        q.push(x);
+        que.push(x);
     }
 
     // Check if stack and queue are the same
-    while (!stk.empty() && !q.empty()) {
-        if (stk.top() == q.front()) {
+    while (!stk.empty() && !que.empty()) {
+        if (stk.top() == que.front()) {
             stk.pop();
-            q.pop();
+            que.pop();
         } else {
             break;
         }
     }
 
     // Output result
-    if (stk.empty() && q.empty()) {
+    if (stk.empty() && que.empty()) {
         cout << "YES" << endl;
     } else {
         cout << "NO" << endl;
