@@ -1,80 +1,105 @@
-#include<bits/stdc++.h>
+#include <iostream>
+#include <queue>
+#include <sstream>
 
 using namespace std;
 
-// Define the structure for the tree node
+// Define a structure for the binary tree node
 struct TreeNode {
     int val;
-    TreeNode* left;
-    TreeNode* right;
+    TreeNode *left, *right;
     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
 
-// Function to construct a binary tree from level order traversal
-TreeNode* constructTree(vector<int>& levelOrder) {
-    if (levelOrder.empty() || levelOrder[0] == -1) {
-        return NULL;
-    }
+// Function to build the binary tree from level order input
+TreeNode* buildTree(vector<string>& nodes) {
+    if (nodes.empty()) return NULL;
 
+    TreeNode* root = new TreeNode(stoi(nodes[0]));
     queue<TreeNode*> q;
-    TreeNode* root = new TreeNode(levelOrder[0]);
     q.push(root);
 
-    size_t i = 1;
-    while (!q.empty() && i < levelOrder.size()) {
+    for (std::vector<std::__cxx11::basic_string<char>>::size_type i = 1; i < nodes.size(); i += 2) {
         TreeNode* current = q.front();
         q.pop();
 
-        int leftValue = levelOrder[i++];
-        if (leftValue != -1) {
-            current->left = new TreeNode(leftValue);
+        if (nodes[i] != "-1") {
+            current->left = new TreeNode(stoi(nodes[i]));
             q.push(current->left);
         }
 
-        if (i < levelOrder.size()) {
-            int rightValue = levelOrder[i++];
-            if (rightValue != -1) {
-                current->right = new TreeNode(rightValue);
-                q.push(current->right);
-            }
+        if (i + 1 < nodes.size() && nodes[i + 1] != "-1") {
+            current->right = new TreeNode(stoi(nodes[i + 1]));
+            q.push(current->right);
         }
     }
 
     return root;
 }
 
-// Function to perform in-order traversal and collect leaf node values
-void getLeafNodes(TreeNode* root, vector<int>& leafNodes) {
-    if (root) {
-        if (!root->left && !root->right) {
-            leafNodes.push_back(root->val);
+// Function to print nodes at a specific level
+void printNodesAtLevel(TreeNode* root, int level) {
+    if (root == NULL || level < 0) {
+        cout << "Invalid" << endl;
+        return;
+    }
+
+    queue<TreeNode*> q;
+    q.push(root);
+    int currentLevel = 0;
+
+    while (!q.empty()) {
+        int levelSize = q.size();
+
+        // Check if the current level matches the specified level
+        if (currentLevel == level) {
+            for (int i = 0; i < levelSize; ++i) {
+                TreeNode* current = q.front();
+                q.pop();
+                cout << current->val << " ";
+
+                if (current->left != NULL) q.push(current->left);
+                if (current->right != NULL) q.push(current->right);
+            }
+            cout << endl;
+            return; // Exit the function after printing the nodes at the specified level
         }
 
-        getLeafNodes(root->left, leafNodes);
-        getLeafNodes(root->right, leafNodes);
+        // Process the level without printing if it doesn't match the specified level
+        for (int i = 0; i < levelSize; ++i) {
+            TreeNode* current = q.front();
+            q.pop();
+
+            if (current->left != NULL) q.push(current->left);
+            if (current->right != NULL) q.push(current->right);
+        }
+
+        ++currentLevel;
     }
+
+    cout << "Invalid" << endl; // If the specified level is not found
 }
 
 int main() {
-    // Read input
-    vector<int> levelOrder;
-    int val;
-    while (cin >> val) {
-        levelOrder.push_back(val);
+    // Input processing
+    string input;
+    getline(cin, input);
+    istringstream iss(input);
+    vector<string> nodes;
+    string node;
+    while (iss >> node) {
+        nodes.push_back(node);
     }
 
     // Construct the binary tree
-    TreeNode* root = constructTree(levelOrder);
+    TreeNode* root = buildTree(nodes);
 
-    // Collect leaf nodes and sort in descending order
-    vector<int> leafNodes;
-    getLeafNodes(root, leafNodes);
-    sort(leafNodes.rbegin(), leafNodes.rend());
+    // Read the level from input
+    int level;
+    cin >> level;
 
-    // Print the result
-    for (int value : leafNodes) {
-        cout << value << " ";
-    }
+    // Print nodes at the specified level
+    printNodesAtLevel(root, level);
 
     return 0;
 }
