@@ -1,5 +1,4 @@
-#include<bits/stdc++.h>
-
+#include <bits/stdc++.h>
 using namespace std;
 
 // Definition for a binary tree node
@@ -7,51 +6,86 @@ struct TreeNode {
     int val;
     TreeNode* left;
     TreeNode* right;
-    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
 };
 
-int sumExceptLeaves(TreeNode* root) {
-    if (root == NULL) {
-        return 0;
+// Function to calculate the sum of non-leaf node values using level order traversal
+int levelOrderTraversal(TreeNode* root) {
+    if (root == nullptr) {
+        return 0; // Return 0 for an empty tree
     }
 
-    if (root->left == NULL && root->right == NULL) {
-        // Leaf node
-        return 0;
+    int nonLeafNodeSum = 0;
+    queue<TreeNode*> q;
+    q.push(root);
+
+    while (!q.empty()) {
+        TreeNode* current = q.front();
+        q.pop();
+
+        // Check if the current node is a leaf
+        if (current->left == nullptr && current->right == nullptr) {
+            // It's a leaf node, do nothing
+        } else {
+            // It's not a leaf node, add its raw value to nonLeafNodeSum
+            nonLeafNodeSum += current->val;
+        }
+
+        if (current->left != nullptr) {
+            q.push(current->left);
+        }
+        if (current->right != nullptr) {
+            q.push(current->right);
+        }
     }
 
-    // Sum of values in non-leaf nodes
-    return root->val + sumExceptLeaves(root->left) + sumExceptLeaves(root->right);
+    return nonLeafNodeSum;
 }
 
-// Function to build a binary tree from level order traversal
-TreeNode* buildTree(vector<int>& nodes, size_t index) {
-    if (index >= nodes.size() || nodes[index] == -1) {
-        return NULL;
-    }
+// Function to build a binary tree from user input
+TreeNode* buildTree() {
+    int val;
+    
+    cin >> val;
 
-    TreeNode* root = new TreeNode(nodes[index]);
-    root->left = buildTree(nodes, 2 * index + 1);
-    root->right = buildTree(nodes, 2 * index + 2);
+    TreeNode* root = new TreeNode(val);
+    queue<TreeNode*> q;
+    q.push(root);
+
+    while (!q.empty()) {
+        TreeNode* current = q.front();
+        q.pop();
+
+        int leftVal, rightVal;
+        cin >> leftVal;
+
+        if (leftVal != -1) {
+            current->left = new TreeNode(leftVal);
+            q.push(current->left);
+        }
+
+        cin >> rightVal;
+
+        if (rightVal != -1) {
+            current->right = new TreeNode(rightVal);
+            q.push(current->right);
+        }
+    }
 
     return root;
 }
 
-
 int main() {
-    // Read level order input
-    vector<int> nodes;
-    int value;
-    while (cin >> value) {
-        nodes.push_back(value);
-    }
+    // Build the binary tree based on user input
+    TreeNode* root = buildTree();
 
-    // Build the binary tree
-    TreeNode* root = buildTree(nodes, 0);
+    // Call the levelOrderTraversal function with the root of the tree
+    int result = levelOrderTraversal(root);
 
-    // Calculate and output the sum of values in non-leaf nodes
-    int result = sumExceptLeaves(root);
+    // Display the result
     cout << result << endl;
+
+  
 
     return 0;
 }
