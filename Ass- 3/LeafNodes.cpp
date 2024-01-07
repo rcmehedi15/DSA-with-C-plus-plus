@@ -1,105 +1,106 @@
-#include <iostream>
-#include <queue>
-#include <sstream>
-
+#include <bits/stdc++.h>
 using namespace std;
 
-// Define a structure for the binary tree node
-struct TreeNode {
-    int val;
-    TreeNode *left, *right;
-    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+class Node
+{
+public:
+    int value;
+    Node *left;
+    Node *right;
+    Node(int value)
+    {
+        this->value = value;
+        this->left = NULL;
+        this->right = NULL;
+    }
 };
 
-// Function to build the binary tree from level order input
-TreeNode* buildTree(vector<string>& nodes) {
-    if (nodes.empty()) return NULL;
+Node *insert_tree()
+{
+    int value;
+    cin >> value;
+    Node *root;
+    if (value == -1)
+        root = NULL;
+    else
+        root = new Node(value);
+    queue<Node *> q;
+    if (root)
+        q.push(root);
 
-    TreeNode* root = new TreeNode(stoi(nodes[0]));
-    queue<TreeNode*> q;
-    q.push(root);
-
-    for (std::vector<std::__cxx11::basic_string<char>>::size_type i = 1; i < nodes.size(); i += 2) {
-        TreeNode* current = q.front();
+    while (!q.empty())
+    {
+        Node *p = q.front();
         q.pop();
 
-        if (nodes[i] != "-1") {
-            current->left = new TreeNode(stoi(nodes[i]));
-            q.push(current->left);
-        }
+        int lef, rit;
+        cin >> lef >> rit;
+        Node *newValueLeft;
+        Node *newValueRight;
+        if (lef == -1)
+            newValueLeft = NULL;
+        else
+            newValueLeft = new Node(lef);
+        if (rit == -1)
+            newValueRight = NULL;
+        else
+            newValueRight = new Node(rit);
 
-        if (i + 1 < nodes.size() && nodes[i + 1] != "-1") {
-            current->right = new TreeNode(stoi(nodes[i + 1]));
-            q.push(current->right);
-        }
+        p->left = newValueLeft;
+        p->right = newValueRight;
+
+        if (p->left)
+            q.push(p->left);
+        if (p->right)
+            q.push(p->right);
     }
-
     return root;
 }
 
-// Function to print nodes at a specific level
-void printNodesAtLevel(TreeNode* root, int level) {
-    if (root == NULL || level < 0) {
+void LevelFindNodes(Node *root)
+{
+    int Level;
+    cin >> Level;
+    if (root == NULL)
+    {
         cout << "Invalid" << endl;
         return;
     }
+    queue<pair<Node *, int>> q;
+    q.push({root, 0});
+    int Levels = 0;
+    while (!q.empty())
+    {
+        pair<Node *, int> p = q.front();
+        Node *node = p.first;
+        int level = p.second;
+        Levels = level;
+        q.pop();
 
-    queue<TreeNode*> q;
-    q.push(root);
-    int currentLevel = 0;
-
-    while (!q.empty()) {
-        int levelSize = q.size();
-
-        // Check if the current level matches the specified level
-        if (currentLevel == level) {
-            for (int i = 0; i < levelSize; ++i) {
-                TreeNode* current = q.front();
-                q.pop();
-                cout << current->val << " ";
-
-                if (current->left != NULL) q.push(current->left);
-                if (current->right != NULL) q.push(current->right);
-            }
-            cout << endl;
-            return; // Exit the function after printing the nodes at the specified level
+        // main work;
+        if (Level == level)
+        {
+            cout << node->value << " ";
         }
 
-        // Process the level without printing if it doesn't match the specified level
-        for (int i = 0; i < levelSize; ++i) {
-            TreeNode* current = q.front();
-            q.pop();
-
-            if (current->left != NULL) q.push(current->left);
-            if (current->right != NULL) q.push(current->right);
+        if (node->left)
+        {
+            q.push({node->left, level + 1});
         }
-
-        ++currentLevel;
+        if (node->right)
+        {
+            q.push({node->right, level + 1});
+        }
     }
-
-    cout << "Invalid" << endl; // If the specified level is not found
+    if (Level > Levels)
+    {
+        cout << "Invalid" << endl;
+    }
 }
 
-int main() {
-    // Input processing
-    string input;
-    getline(cin, input);
-    istringstream iss(input);
-    vector<string> nodes;
-    string node;
-    while (iss >> node) {
-        nodes.push_back(node);
-    }
-
-    // Construct the binary tree
-    TreeNode* root = buildTree(nodes);
-
-    // Read the level from input
-    int level;
-    cin >> level;
-
-    // Print nodes at the specified level
-    printNodesAtLevel(root, level);
-
+int main()
+{
+    Node *root = insert_tree();
+    LevelFindNodes(root);
     return 0;
 }
