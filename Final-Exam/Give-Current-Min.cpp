@@ -3,63 +3,50 @@ using namespace std;
 
 int main()
 {
-    set<int> s;
+    priority_queue<int, vector<int>, greater<int>> pq; // min heap
     int n;
-    
-    // Input the initial size of the set
     cin >> n;
-    
-    // Input elements and insert into the set
+
     for (int i = 0; i < n; i++)
     {
         int x;
         cin >> x;
-        s.insert(x);
+        pq.push(x);
     }
-    
+
     int q;
-    
-    // Input the number of queries
     cin >> q;
-    
+
     while (q--)
     {
-        int input;
-        cin >> input;
-        
-        if (input == 0)
+        int command;
+        cin >> command;
+
+        if (command == 0)
         {
             int x;
             cin >> x;
-            
-            // Insert element into the set
-            s.insert(x);
-            
-            // Check if the set is not empty and print the smallest element
-            if (!s.empty())
-                cout << *s.begin() << endl;
+            pq.push(x);
+
+            if (!pq.empty())
+                cout << pq.top() << endl;
             else
                 cout << "Empty" << endl;
         }
-        else if (input == 1)
+        else if (command == 1)
         {
-            // Check if the set is not empty and print the smallest element
-            if (!s.empty())
-                cout << *s.begin() << endl;
+            if (!pq.empty())
+                cout << pq.top() << endl;
             else
                 cout << "Empty" << endl;
         }
-        else if (input == 2)
+        else if (command == 2)
         {
-            // Check if the set is not empty
-            if (!s.empty())
+            if (!pq.empty())
             {
-                // Erase the smallest element
-                s.erase(*s.begin());
-                
-                // Check if the set is not empty and print the smallest element
-                if (!s.empty())
-                    cout << *s.begin() << endl;
+                pq.pop();
+                if (!pq.empty())
+                    cout << pq.top() << endl;
                 else
                     cout << "Empty" << endl;
             }
@@ -67,7 +54,9 @@ int main()
                 cout << "Empty" << endl;
         }
         else
-            cout << "Empty" << endl;
+        {
+            cout << "Invalid command" << endl;
+        }
     }
 
     return 0;
