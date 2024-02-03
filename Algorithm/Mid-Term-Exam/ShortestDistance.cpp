@@ -9,18 +9,15 @@ int main() {
 
     vector<vector<long long>> dist(n + 1, vector<long long>(n + 1, INF));
 
-    // Initialize the diagonal elements with 0
     for (int i = 1; i <= n; ++i)
         dist[i][i] = 0;
 
-    // Input edges
     for (int i = 0; i < m; ++i) {
         int u, v, w;
         cin >> u >> v >> w;
-        dist[u][v] = min(dist[u][v], (long long)w);  // handle multiple edges
+        dist[u][v] = min(dist[u][v], (long long)w);  
     }
 
-    // Floyd Warshall algorithm
     for (int k = 1; k <= n; ++k) {
         for (int i = 1; i <= n; ++i) {
             for (int j = 1; j <= n; ++j) {
@@ -31,7 +28,6 @@ int main() {
         }
     }
 
-    // Answer queries
     int q;
     cin >> q;
 

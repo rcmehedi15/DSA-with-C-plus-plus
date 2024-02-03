@@ -3,55 +3,62 @@ using namespace std;
 
 const int INF = INT_MAX;
 
-struct Edge {
-    int src, dest, weight;
-};
-
-void bellmanFord(int nodes, int edges, vector<Edge>& graph, int source, vector<int>& dist) {
-    dist[source] = 0;
-
-    for (int i = 0; i < nodes - 1; ++i) {
-        for (const Edge& edge : graph) {
-            if (dist[edge.src] != INF && dist[edge.src] + edge.weight < dist[edge.dest]) {
-                dist[edge.dest] = dist[edge.src] + edge.weight;
-            }
-        }
-    }
-
-    for (const Edge& edge : graph) {
-        if (dist[edge.src] != INF && dist[edge.src] + edge.weight < dist[edge.dest]) {
-            cout << "Negative Cycle Detected\n";
-            exit(0);
-        }
-    }
-}
-
 int main() {
-    int nodes, edges;
-    cin >> nodes >> edges;
+    int n, m;
+    cin >> n >> m;
 
-    vector<Edge> graph(edges);
-    for (int i = 0; i < edges; ++i) {
-        cin >> graph[i].src >> graph[i].dest >> graph[i].weight;
+    vector<vector<pair<int, int>>> graph(n + 1);
+
+    for (int i = 0; i < m; ++i) {
+        int u, v, w;
+        cin >> u >> v >> w;
+        graph[u].emplace_back(v, w);
     }
 
     int source;
     cin >> source;
 
-    int testCases;
-    cin >> testCases;
+    vector<int> distance(n + 1, INF);
+    distance[source] = 0;
 
-    for (int i = 0; i < testCases; ++i) {
+    // Detect negative cycles using Bellman-Ford
+    for (int i = 1; i <= n - 1; ++i) {
+        for (int u = 1; u <= n; ++u) {
+            for (auto& edge : graph[u]) {
+                int v = edge.first;
+                int weight = edge.second;
+
+                if (distance[u] != INF && distance[u] + weight < distance[v]) {
+                    distance[v] = distance[u] + weight;
+                }
+            }
+        }
+    }
+
+    // Check for negative cycles
+    for (int u = 1; u <= n; ++u) {
+        for (auto& edge : graph[u]) {
+            int v = edge.first;
+            int weight = edge.second;
+
+            if (distance[u] != INF && distance[u] + weight < distance[v]) {
+                cout << "Negative Cycle Detected\n";
+                return 0;
+            }
+        }
+    }
+
+    int test_cases;
+    cin >> test_cases;
+
+    for (int i = 0; i < test_cases; ++i) {
         int destination;
         cin >> destination;
 
-        vector<int> dist(nodes, INF);
-        bellmanFord(nodes, edges, graph, source, dist);
-
-        if (dist[destination] == INF) {
+        if (distance[destination] == INF) {
             cout << "Not Possible\n";
         } else {
-            cout << dist[destination] << endl;
+            cout << distance[destination] << "\n";
         }
     }
 
